@@ -7,65 +7,71 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    tareas: [],
-    tarea: {
+    personas: [],
+    persona: {
       id: '',
       nombre: ''
     }
   },
   mutations: {
-    setTareas(state, payload) {
-      state.tareas = payload
+    setPersonas(state, payload) {
+      state.personas = payload
     },
-    setTarea(state, payload) {
-      state.tarea =  payload
+    setPersona(state, payload) {
+      state.persona =  payload
     },
-    setEliminarTarea(state, payload) {
-      state.tareas = state.tareas.filter(item => item.id !== payload)
+    addPersona(state, payload) {
+      state.personas.push(payload)
+      console.log(state.personas);
+    },
+    setEliminarPersona(state, payload) {
+      state.personas = state.personas.filter(item => item.id !== payload)
     }
   },
   actions: {
-    getTareas({ commit }) {
-      const tareas = []
-      db.collection('tareas').get()
+    getPersonas({ commit }) {
+      const personas = []
+      db.collection('personas').get()
         .then(res => {
           res.forEach(doc => {
-            let tarea = doc.data()
-            tarea.id = doc.id
-            tareas.push(tarea)
+            let persona = doc.data()
+            persona.id = doc.id
+            personas.push(persona)
           });
-          commit('setTareas', tareas)
+          commit('setPersonas', personas)
         })
     },
-    getTarea({ commit }, idTarea) {
-      db.collection('tareas').doc(idTarea).get()
+    getPersona({ commit }, id) {
+      db.collection('personas').doc(id).get()
         .then(doc => {  
-          let tarea = doc.data()
-          tarea.id = doc.id
-          commit('setTarea', tarea)
+          let persona = doc.data()
+          persona.id = doc.id
+          commit('setPersona', persona)
         })
     },
-    editarTarea({ commit }, tarea) {
-      db.collection('tareas').doc(tarea.id).update({
-        nombre: tarea.nombre
+    editarPersona({ commit }, persona) {
+      db.collection('personas').doc(persona.id).update({
+        nombre: persona.nombre
       })
         .then(() => {
           router.push('/')
         })
     },
-    agregarTarea({ commit }, nombreTarea) {
-      db.collection('tareas').add({
-        nombre: nombreTarea
-      })
+    agregarPersona({ commit }, nombrePersona) {
+      let persona = {
+        nombre: nombrePersona
+      }
+      db.collection('personas').add(persona)
         .then(doc => {
-          router.push('/')
+          persona.id = doc.id
+          commit('addPersona', persona)
         })
     },
-    eliminarTarea({ commit }, idTarea) {
-      db.collection('tareas').doc(idTarea).delete()
+    eliminarPersona({ commit }, idPersona) {
+      db.collection('personas').doc(idPersona).delete()
         .then(() => {
-          console.log('Tarea eliminada')
-          commit('setEliminarTarea', idTarea)
+          console.log(idPersona);
+          commit('setEliminarPersona', idPersona)
         })
     }
   },

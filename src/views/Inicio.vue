@@ -6,15 +6,15 @@
         </router-link>
         <ul>
             <li 
-                v-for="(tarea, index) in tareas" :key="index"
+                v-for="(persona, index) in personas" :key="index"
             >
-                {{ tarea.nombre }} - {{ tarea.id }}
+                {{ persona.nombre }} - {{ persona.id }}
                 <router-link 
-                    :to="{name: 'Editar', params: {id: tarea.id}}"
+                    :to="{name: 'Editar', params: {id: persona.id}}"
                 >
                     <button>Editar</button>
                 </router-link>
-                <button @click="eliminarTarea(tarea.id)">Eliminar</button>
+                <button @click="eliminarPersona(tarea.id)">Eliminar</button>
             </li>
         </ul>
     </div>
@@ -26,13 +26,13 @@ import { mapActions, mapState } from "vuex";
 export default {
     name: 'Inicio',
     created() {
-        this.getTareas()
+        this.getPersonas()
     },
     methods: {
-        ...mapActions(['getTareas', 'eliminarTarea'])
+        ...mapActions(['getPersonas', 'eliminarPersona'])
     },
     computed: {
-        ...mapState(['tareas'])
+        ...mapState(['personas'])
     }
 }
 </script>
