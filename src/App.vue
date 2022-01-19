@@ -69,6 +69,11 @@ export default {
         title: 'Personas',
         to: '/personas'
       },
+      {
+        icon: 'mdi-account-group',
+        title: 'Compras',
+        to: '/compras'
+      },
     ],
     miniVariant: true,
     right: true,
