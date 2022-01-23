@@ -1,8 +1,12 @@
 <template>
 	<div>
-		<cabecera-titulo titulo="Compra"></cabecera-titulo>
+		<cabecera-titulo titulo="Compras"></cabecera-titulo>
 		<v-row>
-			<v-col cols="12">
+			<v-col md="4" cols="12">
+				<create-compra></create-compra>
+			</v-col>
+			<v-col md="8" cols="12">
+				<list-compra></list-compra>
 			</v-col>
 		</v-row>
 	</div>
@@ -10,11 +14,19 @@
 
 <script>
 import cabeceraTitulo from '@/components/common/cabeceraTitulo'
+import createCompra from '@/components/compra/createCompra'
+import listCompra from '@/components/compra/listCompra'
 
 export default {
 	name: 'Compra',
+	data() {
+		return {
+		}
+	},
 	components: {
-		cabeceraTitulo
+		cabeceraTitulo,
+		createCompra,
+		listCompra
 	}
 }
 </script>

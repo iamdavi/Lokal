@@ -1,6 +1,6 @@
 <template>
 	<v-row justify="center">
-		<v-col cols="12" md="8" sm="12" class="text-centerf">
+		<v-col cols="12" md="8" sm="12" class="text-center">
 			<h1>{{ titulo }}</h1>
 		</v-col>
 	</v-row>

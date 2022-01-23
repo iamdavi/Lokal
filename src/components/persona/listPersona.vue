@@ -4,7 +4,6 @@
 			:items="personas"
 			hide-default-footer
 			:items-per-page="-1"
-			sort-by="nombre"
 			class="elevation-1"
 		>
     <template v-slot:top>
@@ -140,7 +139,7 @@ export default {
 	},
 
 	methods: {
-    ...mapActions(['getPersonas', 'eliminarPersona']),
+    ...mapActions(['getPersonas', 'eliminarPersona', 'editarPersona']),
 
 		editItem (item) {
 			this.editedIndex = this.personas.indexOf(item)
@@ -176,6 +175,7 @@ export default {
 			} else {
 				this.personas.push(this.editedItem)
 			}
+			this.editarPersona(this.editedItem)
 			this.close()
 		},
 	},

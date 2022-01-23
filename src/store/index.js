@@ -7,6 +7,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    compras: [],
+    compra: {
+      fecha: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      gastado: 0,
+      obtenido: 0
+    },
     personas: [],
     persona: {
       id: '',
@@ -22,16 +28,26 @@ export default new Vuex.Store({
     },
     addPersona(state, payload) {
       state.personas.push(payload)
-      console.log(state.personas);
     },
     setEliminarPersona(state, payload) {
       state.personas = state.personas.filter(item => item.id !== payload)
+    },
+    addCompra(state, payload) {
+      state.compras.unshift(payload)
+    },
+    setCompras(state, payload) {
+      state.compras = payload
     }
   },
   actions: {
-    getPersonas({ commit }) {
+    // PERSONAS
+    getPersonas({ commit }, limit=-1) {
       const personas = []
-      db.collection('personas').get()
+      const qry = db.collection('personas')
+      if (limit > -1) {
+        qry.limit(limit)
+      }
+      qry.orderBy('nombre').get()
         .then(res => {
           res.forEach(doc => {
             let persona = doc.data()
@@ -53,9 +69,6 @@ export default new Vuex.Store({
       db.collection('personas').doc(persona.id).update({
         nombre: persona.nombre
       })
-        .then(() => {
-          router.push('/')
-        })
     },
     agregarPersona({ commit }, nombrePersona) {
       let persona = {
@@ -70,9 +83,50 @@ export default new Vuex.Store({
     eliminarPersona({ commit }, idPersona) {
       db.collection('personas').doc(idPersona).delete()
         .then(() => {
-          console.log(idPersona);
           commit('setEliminarPersona', idPersona)
         })
+    },
+    // FIN -> PERSONA
+    // COMPRA
+    createCompra({ commit }, compraData) {
+      let compra = {
+        fecha: compraData.fecha,
+        obtenido: parseInt(compraData.obtenido),
+        gastado: parseInt(compraData.gastado)
+      }
+      db.collection('compras').add(compra)
+        .then(doc => {
+          compra.id = doc.id
+          compra = Vue.getCompraProfits(compra)
+          commit('addCompra', compra)
+        })
+    },
+    /** 
+     * Método que obtiene las compras 
+     * @param   {string}  limit - El número de registros a devolver, en caso de
+     *                            que no se pase ningún valor, devuelve los 1000
+     *                            primeros registros (= todos)
+     */
+    getCompras({ commit }, limit=1000) {
+      const compras = []
+      db.collection('compras').limit(limit).orderBy('fecha').get()
+        .then(res => {
+          res.forEach(doc => {
+            let compra = doc.data()
+            compra.id = doc.id
+            compra = Vue.getCompraProfits(compra)
+            compras.unshift(compra)
+          });
+          commit('setCompras', compras)
+        })
+    },
+    getProfitCompra(compra) {
+      const profit = parseInt(compra.obtenido) - parseInt(compra.gastado)
+      let signo = 0 < profit ? '+ ' : '- '
+      if (profit === 0) { signo = '' }
+      compra.profit = String(parseInt(compra.obtenido) - parseInt(compra.gastado))
+      compra.profitString = String(signo + Math.abs(profit))
+      return compra
     }
   },
   modules: {

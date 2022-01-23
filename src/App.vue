@@ -70,9 +70,14 @@ export default {
         to: '/personas'
       },
       {
-        icon: 'mdi-account-group',
+        icon: 'mdi-cart',
         title: 'Compras',
         to: '/compras'
+      },
+      {
+        icon: 'mdi-food-drumstick',
+        title: 'Productos',
+        to: '/productos'
       },
     ],
     miniVariant: true,
@@ -86,5 +91,8 @@ export default {
 <style>
 .v-application--wrap {
   min-height: fit-content;
+}
+.mxw-30 {
+  max-width: 30% !important;
 }
 </style>
