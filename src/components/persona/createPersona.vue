@@ -1,5 +1,5 @@
 <template>
-	<v-card>
+	<v-card color="blue lighten-4">
     <v-form @submit.prevent="agregarPersona(nombre)" v-model="valid">
 			<v-card-title>
 				<span class="text-h5">Crear persona</span>

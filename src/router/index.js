@@ -10,6 +10,16 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Inicio.vue')
   },
   {
+    path: '/listas-compra',
+    name: 'ListasCompra',
+    component: () => import(/* webpackChunkName: "about" */ '../views/listaCompra/index.vue')
+  },
+  {
+    path: '/listas-compra/new',
+    name: 'ListasCompraNew',
+    component: () => import(/* webpackChunkName: "about" */ '../views/listaCompra/new.vue')
+  },
+  {
     path: '/productos',
     name: 'Productos',
     component: () => import(/* webpackChunkName: "about" */ '../views/producto/index.vue')

@@ -79,6 +79,11 @@ export default {
         title: 'Productos',
         to: '/productos'
       },
+      {
+        icon: 'mdi-format-list-bulleted-square',
+        title: 'Listas de compra',
+        to: '/listas-compra'
+      },
     ],
     miniVariant: true,
     right: true,
@@ -92,7 +97,16 @@ export default {
 .v-application--wrap {
   min-height: fit-content;
 }
+.mxw-20 {
+  max-width: 20% !important;
+}
 .mxw-30 {
   max-width: 30% !important;
+}
+.mxw-40 {
+  max-width: 40% !important;
+}
+.mxw-50 {
+  max-width: 50% !important;
 }
 </style>

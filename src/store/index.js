@@ -17,7 +17,13 @@ export default new Vuex.Store({
     persona: {
       id: '',
       nombre: ''
-    }
+    },
+    productos: [],
+    producto: {
+      nombre: '',
+      precio: 0
+    },
+    listasCompras: []
   },
   mutations: {
     setPersonas(state, payload) {
@@ -37,6 +43,18 @@ export default new Vuex.Store({
     },
     setCompras(state, payload) {
       state.compras = payload
+    },
+    setProductos(state, payload) {
+      state.productos = payload
+    },
+    addProducto(state, payload) {
+      state.productos.unshift(payload)
+    },
+    setEliminarProducto(state, payload) {
+      state.productos = state.productos.filter(item => item.id !== payload)
+    },
+    addListaCompra(state, payload) {
+      state.listasCompras.unshift(payload)
     }
   },
   actions: {
@@ -120,14 +138,53 @@ export default new Vuex.Store({
           commit('setCompras', compras)
         })
     },
-    getProfitCompra(compra) {
-      const profit = parseInt(compra.obtenido) - parseInt(compra.gastado)
-      let signo = 0 < profit ? '+ ' : '- '
-      if (profit === 0) { signo = '' }
-      compra.profit = String(parseInt(compra.obtenido) - parseInt(compra.gastado))
-      compra.profitString = String(signo + Math.abs(profit))
-      return compra
+    // FIN -> COMPRA
+    // PRODUCTO
+    getProductos({ commit }) {
+      const productos = []
+      db.collection('productos').get()
+        .then(res => {
+          res.forEach(doc => {
+            let producto = doc.data()
+            producto.id = doc.id
+            productos.push(producto)
+          });
+          commit('setProductos', productos)
+        })
+    },
+    addProducto({ commit }, productoData) {
+      let producto = {}
+      Object.assign(producto, productoData)
+      db.collection('productos').add(producto)
+        .then(doc => {
+          producto.id = doc.id
+          commit('addProducto', producto)
+        })
+    },
+    editProducto({ commit }, producto) {
+      db.collection('productos').doc(producto.id).update({
+        nombre: producto.nombre,
+        precio: producto.precio
+      })
+    },
+    eliminarProducto({ commit }, id) {
+      db.collection('productos').doc(id).delete()
+        .then(() => {
+          commit('setEliminarProducto', id)
+        })
+    },
+    // FIN -> PRODUCTO
+    // LISTA-COMPRA
+    addListaCompra({ commit }, listaCompra) {
+      let lista = {}
+      Object.assign(lista, listaCompra)
+      db.collection('listas-compras').add(lista)
+        .then(doc => {
+          listaCompra.id = doc.id
+          commit('addListaCompra', listaCompra)
+        })
     }
+    // FIN -> LISTA-COMPRA
   },
   modules: {
   }
