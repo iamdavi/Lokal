@@ -85,7 +85,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import CreateProducto from '@/components/productos/createProducto'
-import ProductoPreciosList from '@/components/common/producto/productoPreciosList'
+import ProductoPreciosList from '@/components/productos/productoPreciosList'
 
 export default {
 	data() {
