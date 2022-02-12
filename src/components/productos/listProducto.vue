@@ -1,32 +1,45 @@
 <template>
 	<v-card>
 		<v-card-title>
-			<span class="text-h5">Lista de productos</span>
+			<v-row>
+				<v-col cols="12" sm="6">
+					<span class="text-h5">Lista de productos</span>
+				</v-col>
+				<v-col cols="12" sm="6" class="text-md-right text-sm-left">
+					<producto-precios-list 
+						:producto="{ 
+							venta: 'Venta producto',
+							precio: 'Venta precio',
+							profit: 'Profit'
+						}" 
+					/>
+				</v-col>
+			</v-row>
 		</v-card-title>
 		<v-card-text>
 			<v-row>
 				<v-col
 					sm="6"
 					cols="12"
-					class="py-0"
 					v-for="producto in productos"
 					:key="producto.id"
 				>
 					<v-row>
-						<v-col cols="6" class="d-flex align-center">
+						<v-col cols="5" class="d-flex align-center">
 							<p class="body-1 mb-0">
 								<b>
 									{{ producto.nombre }}
 								</b>
 							</p>
 						</v-col>
-						<v-col cols="3" class="d-flex align-center">
-							<p class="body-1 mb-0">
-								<span class="float-right grey--text">
-									{{ producto.precio }}
-									<v-icon small class="euro-icon-product-list">mdi-currency-eur</v-icon>
-								</span>
-							</p>
+						<v-col cols="4" class="d-flex align-center justify-center">
+							<producto-precios-list 
+								:producto="{ 
+									venta: producto.venta,
+									precio: producto.precio,
+									profit: getProductoProfit(producto)
+								}" 
+							/>
 						</v-col>
 						<v-col cols="3" class="d-flex justify-end">
 							<v-btn icon @click="editProductoModal(producto)">
@@ -72,6 +85,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import CreateProducto from '@/components/productos/createProducto'
+import ProductoPreciosList from '@/components/common/producto/productoPreciosList'
 
 export default {
 	data() {
@@ -86,7 +100,8 @@ export default {
 		}
 	},
 	components: {
-		CreateProducto
+		'CreateProducto': CreateProducto,
+		'ProductoPreciosList': ProductoPreciosList
 	},
 	created() {
 		this.getProductos()
@@ -102,6 +117,9 @@ export default {
 		editProductoModal(producto) {
 			this.productoEdit = producto
 			this.editDialog = true
+		},
+		getProductoProfit(producto) {
+			return producto.venta - producto.precio;
 		}
 	},
 	computed: {
@@ -115,5 +133,20 @@ export default {
 <style>
 .euro-icon-product-list {
 	margin-bottom: 3px;
+}
+.producto-precios-list {
+	display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.producto-precios-list > span {
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.producto-precios-list > .producto-precios-list-profit {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  grid-row-end: 3;
 }
 </style>

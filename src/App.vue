@@ -109,4 +109,7 @@ export default {
 .mxw-50 {
   max-width: 50% !important;
 }
+.justify-self-start {
+  justify-self: start !important;
+}
 </style>
