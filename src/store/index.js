@@ -55,6 +55,9 @@ export default new Vuex.Store({
     },
     addListaCompra(state, payload) {
       state.listasCompras.unshift(payload)
+    },
+    setListasCompras(state, payload) {
+      state.listasCompras = payload
     }
   },
   actions: {
@@ -182,6 +185,18 @@ export default new Vuex.Store({
         .then(doc => {
           listaCompra.id = doc.id
           commit('addListaCompra', listaCompra)
+        })
+    },
+    getListasCompras({ commit }) {
+      let listasCompras = []
+      db.collection('listas-compras').get()
+        .then(res => {
+          res.forEach(doc => {
+            let lista = doc.data()
+            lista.id = doc.id
+            listasCompras.unshift(lista)
+          });
+          commit('setListasCompras', listasCompras)
         })
     }
     // FIN -> LISTA-COMPRA

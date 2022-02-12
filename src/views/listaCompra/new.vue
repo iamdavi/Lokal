@@ -210,7 +210,7 @@ export default {
 .card-form-add-producto {
 	position: sticky;
 	top: 68px;
-	z-index: 100;
+	z-index: 5;
 }
 .guardar-formulario-button {
 	position: sticky;
