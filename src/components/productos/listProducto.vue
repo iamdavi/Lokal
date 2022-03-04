@@ -64,28 +64,22 @@
 
 		</v-dialog>
 		<v-dialog v-model="deleteDialog" max-width="500px">
-			<v-card>
-				<v-card-title>
-					<span class="text-h5">Eliminar producto</span>
-				</v-card-title>
-				<v-card-text>
-					<span class="text-h5">
-						{{ productoEdit.nombre }}
-					</span>
-				</v-card-text>
-				<v-card-actions class="d-flex justify-space-around">
-					<v-btn color="error" @click="deleteDialog = false">Cancelar</v-btn>
-					<v-btn color="error" text @click="eliminarProducto(productoEdit.id); deleteDialog = false">Eliminar</v-btn>
-				</v-card-actions>
-			</v-card>
+			<delete-dialog-card 
+				title="Eliminar producto" 
+				icon="mdi-food-drumstick" 
+				:nombreItem="productoEdit.nombre" 
+				v-on:close-dialog="closeModal()"
+				v-on:delete-item-dialog="eliminarProducto(productoEdit.id)"
+			/>
 		</v-dialog>
 	</v-card>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import CreateProducto from '@/components/productos/createProducto'
-import ProductoPreciosList from '@/components/productos/productoPreciosList'
+import CreateProducto from '@/components/productos/subcomponents/createProducto'
+import ProductoPreciosList from '@/components/productos/subcomponents/productoPreciosList'
+import deleteDialogCard from '@/components/common/deleteDialogCard'
 
 export default {
 	data() {
@@ -101,7 +95,8 @@ export default {
 	},
 	components: {
 		'CreateProducto': CreateProducto,
-		'ProductoPreciosList': ProductoPreciosList
+		'ProductoPreciosList': ProductoPreciosList,
+		'DeleteDialogCard': deleteDialogCard
 	},
 	created() {
 		this.getProductos()
@@ -114,12 +109,15 @@ export default {
 			this.productoEdit.precio = producto.precio
 			this.deleteDialog = true
 		},
+		closeModal() {
+			this.deleteDialog = false
+		},
 		editProductoModal(producto) {
 			this.productoEdit = producto
 			this.editDialog = true
 		},
 		getProductoProfit(producto) {
-			return producto.venta - producto.precio;
+			return parseFloat(producto.venta - producto.precio).toFixed(2)
 		}
 	},
 	computed: {
@@ -129,24 +127,3 @@ export default {
 	}
 }
 </script>
-
-<style>
-.euro-icon-product-list {
-	margin-bottom: 3px;
-}
-.producto-precios-list {
-	display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
-.producto-precios-list > span {
-  text-align: center;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-.producto-precios-list > .producto-precios-list-profit {
-  grid-column-start: 2;
-  grid-row-start: 1;
-  grid-row-end: 3;
-}
-</style>

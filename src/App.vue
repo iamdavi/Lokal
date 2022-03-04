@@ -94,22 +94,5 @@ export default {
 </script>
 
 <style>
-.v-application--wrap {
-  min-height: fit-content;
-}
-.mxw-20 {
-  max-width: 20% !important;
-}
-.mxw-30 {
-  max-width: 30% !important;
-}
-.mxw-40 {
-  max-width: 40% !important;
-}
-.mxw-50 {
-  max-width: 50% !important;
-}
-.justify-self-start {
-  justify-self: start !important;
-}
+@import './assets/css/style.css';
 </style>

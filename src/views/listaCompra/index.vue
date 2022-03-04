@@ -11,17 +11,41 @@
 						sm="6"
 						md="4"
 					>
-						<v-card height="100%">
-							<v-card-title class="pb-0">{{ lista.nombre }}</v-card-title>
+						<v-dialog v-model="deleteListaModal" max-width="500px">
+							<delete-dialog-card 
+								title="Eliminar lista de compra" 
+								icon="mdi-format-list-bulleted-square" 
+								:nombreItem="listaToDelete.nombre ? listaToDelete.nombre : ''" 
+								v-on:close-dialog="closeModal()"
+								v-on:delete-item-dialog="eliminarListaCompra(id)"
+							/>
+						</v-dialog>
+						<v-card class="lista-compra-item">
+							<v-card-title class="pb-0">
+								{{ lista.nombre }}
+								<v-spacer></v-spacer>
+								<v-icon 
+									@click="showModalToDelete(lista)"
+									dense
+								>mdi-close</v-icon>
+							</v-card-title>
 							<v-card-text>
 								<ul>
 									<li
 										v-for="(producto, index) in lista.productos"
 										:key="index"
 									>{{ producto.nombre }}</li>
+									<div class="lista-compra-list-item-text"></div>
 								</ul>
-								<div class="lista-compra-list-item-text"></div>
 							</v-card-text>
+							<v-card-actions>
+								<v-btn 
+									block 
+									small 
+									:to="`/listas-compra/edit/${lista.id}`"
+									color="primary"
+								>Ver</v-btn>
+							</v-card-actions>
 						</v-card>
 					</v-col>
 				</v-row>
@@ -42,17 +66,37 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import cabeceraTitulo from '@/components/common/cabeceraTitulo'
+import deleteDialogCard from '@/components/common/deleteDialogCard'
 
 export default {
 	name: 'ListaCompra',
+	data() {
+		return {
+			deleteListaModal: false,
+			listaToDelete: {
+				id: '',
+				nombre: '',
+				productos: []
+			},
+		}
+	},
 	components: {
-		cabeceraTitulo
+		cabeceraTitulo,
+		deleteDialogCard
 	},
 	created() {
 		this.getListasCompras()
 	},
 	methods: {
-		...mapActions(['getListasCompras'])
+		...mapActions(['getListasCompras', 'eliminarListaCompra']),
+		closeModal() {
+			this.deleteListaModal = false
+		},
+		showModalToDelete(lista) {
+			this.listaToDelete = Object.assign({}, lista)
+			console.log(this.listaToDelete);
+			this.deleteListaModal = true
+		}
 	},
 	computed: {
 		...mapState({
@@ -73,7 +117,15 @@ export default {
 	height: 22px;
 	box-shadow: inset 2px -16px 14px -8px white;
 	position: absolute;
-	bottom: 20px;
+	bottom: 30%;
 	left: 0px;
+}
+.lista-compra-item {
+	position: relative;
+}
+.lista-compra-item > .v-card__actions {
+	width: 100%;
+	position: relative;
+	bottom: 0px;
 }
 </style>

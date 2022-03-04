@@ -87,6 +87,9 @@ export default {
 			} else {
 				this.editProducto(producto)
 			}
+			this.producto.nombre = ''
+			this.producto.precio = ''
+			this.producto.venta = ''
 			this.$emit('submit')
 		}
 	},

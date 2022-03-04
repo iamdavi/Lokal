@@ -104,14 +104,3 @@ export default {
 	},
 }
 </script>
-
-<style>
-.compra-options-row {
-	width: 25px;
-	height: 25px;
-	background-color: red;
-	position: absolute;
-	right: 0px;
-	bottom: 14px;
-}
-</style>

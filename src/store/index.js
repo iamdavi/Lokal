@@ -23,7 +23,11 @@ export default new Vuex.Store({
       nombre: '',
       precio: 0
     },
-    listasCompras: []
+    listasCompras: [],
+    listaCompra: {
+      nombre: '',
+      productos: []
+    }
   },
   mutations: {
     setPersonas(state, payload) {
@@ -58,6 +62,12 @@ export default new Vuex.Store({
     },
     setListasCompras(state, payload) {
       state.listasCompras = payload
+    },
+    setListaCompra(state, payload) {
+      state.listaCompra = payload
+    },
+    setEliminarListaCompra(state, payload) {
+      state.listasCompras = state.listasCompras.filter(item => item.id !== payload)
     }
   },
   actions: {
@@ -152,6 +162,7 @@ export default new Vuex.Store({
             producto.id = doc.id
             productos.push(producto)
           });
+          productos.sort((a, b) => a.nombre.localeCompare(b.nombre))
           commit('setProductos', productos)
         })
     },
@@ -185,6 +196,22 @@ export default new Vuex.Store({
         .then(doc => {
           listaCompra.id = doc.id
           commit('addListaCompra', listaCompra)
+        })
+    },
+    eliminarListaCompra({ commit }, id) {
+      console.log(id);
+      // db.collection('listas-compras').doc(id).delete()
+      //   .then(() => {
+      //     commit('setEliminarListaCompra', id)
+      //   })
+    },
+    getListaCompra({ commit }, id) {
+      db.collection('listas-compras').doc(id).get()
+        .then(doc => {  
+          let listaCompra = doc.data()
+          listaCompra.id = doc.id
+          commit('setListaCompra', listaCompra)
+          return listaCompra
         })
     },
     getListasCompras({ commit }) {

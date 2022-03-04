@@ -52,21 +52,13 @@
 				</v-card>
 			</v-dialog>
 			<v-dialog v-model="dialogDelete" max-width="500px">
-				<v-card>
-					<v-card-title>
-						<span class="text-h5">Eliminar usuario</span>
-					</v-card-title>
-					<v-card-text>
-						<span class="text-h5">
-							<v-icon>mdi-account</v-icon>
-							{{ editedItem.nombre }}
-						</span>
-					</v-card-text>
-					<v-card-actions class="d-flex justify-space-around">
-						<v-btn color="error" @click="closeDelete()">Cancelar</v-btn>
-						<v-btn color="error" text @click="eliminarPersona(editedItem.id);closeDelete()">Eliminar</v-btn>
-					</v-card-actions>
-				</v-card>
+				<delete-dialog-card 
+					title="Eliminar usuario" 
+					icon="mdi-account" 
+					:nombreItem="editedItem.nombre" 
+					v-on:close-dialog="closeDelete()"
+					v-on:delete-item-dialog="eliminarPersona(editedItem.id)"
+				/>
 			</v-dialog>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
@@ -92,6 +84,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import deleteDialogCard from '@/components/common/deleteDialogCard'
 
 export default {
 	data: () => ({
@@ -124,7 +117,9 @@ export default {
 			personas: 'personas'
 		}),
 	},
-
+	components: {
+		deleteDialogCard
+	},
 	watch: {
 		dialog (val) {
 			val || this.close()
