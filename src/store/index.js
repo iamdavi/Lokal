@@ -199,11 +199,10 @@ export default new Vuex.Store({
         })
     },
     eliminarListaCompra({ commit }, id) {
-      console.log(id);
-      // db.collection('listas-compras').doc(id).delete()
-      //   .then(() => {
-      //     commit('setEliminarListaCompra', id)
-      //   })
+      db.collection('listas-compras').doc(id).delete()
+        .then(() => {
+          commit('setEliminarListaCompra', id)
+        })
     },
     getListaCompra({ commit }, id) {
       db.collection('listas-compras').doc(id).get()

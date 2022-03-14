@@ -16,7 +16,8 @@
 					<v-col cols="4">
 						<span class="grey--text float-right">
 							<v-text-field
-								class="text-field-dense"
+								class="text-field-dense mt-0 pt-0"
+								style="max-width: 4.7rem;"
 								v-model="producto.cantidadPrecioString"
 								:hide-details="true"
 								append-icon="mdi-currency-eur"
@@ -27,9 +28,7 @@
 				</v-row>
 			</v-list-item-title>
 			<v-list-item-icon class="list-item-remove-producto" @click="removeProductoLocal(index)">
-				<v-btn icon>
 					<v-icon small color="error">mdi-close</v-icon>
-				</v-btn>
 			</v-list-item-icon>
 		</v-list-item>
 	</v-list>

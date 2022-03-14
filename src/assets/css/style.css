@@ -43,9 +43,9 @@
 	bottom: 14px;
 }
 .card-form-add-producto {
-	position: sticky;
+	position: sticky !important;
 	top: 68px;
-	z-index: 5;
+	z-index: 4;
 }
 .horizontal-rule {
 	height: 3px;

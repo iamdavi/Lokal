@@ -1,6 +1,15 @@
 <template>
 	<div>
 		<cabecera-titulo titulo="Listas de la compra"></cabecera-titulo>
+		<v-dialog v-model="deleteListaModal" max-width="500px">
+			<delete-dialog-card 
+				title="Eliminar lista de compra" 
+				icon="mdi-format-list-bulleted-square" 
+				:nombreItem="listaToDelete.nombre ? listaToDelete.nombre : ''" 
+				v-on:close-dialog="closeModal()"
+				v-on:delete-item-dialog="eliminarListaCompra(listaToDelete.id)"
+			/>
+		</v-dialog>
 		<v-row justify="center">
 			<v-col cols="12" md="8" sm="12">
 				<v-row>
@@ -11,15 +20,6 @@
 						sm="6"
 						md="4"
 					>
-						<v-dialog v-model="deleteListaModal" max-width="500px">
-							<delete-dialog-card 
-								title="Eliminar lista de compra" 
-								icon="mdi-format-list-bulleted-square" 
-								:nombreItem="listaToDelete.nombre ? listaToDelete.nombre : ''" 
-								v-on:close-dialog="closeModal()"
-								v-on:delete-item-dialog="eliminarListaCompra(id)"
-							/>
-						</v-dialog>
 						<v-card class="lista-compra-item">
 							<v-card-title class="pb-0">
 								{{ lista.nombre }}
@@ -94,7 +94,6 @@ export default {
 		},
 		showModalToDelete(lista) {
 			this.listaToDelete = Object.assign({}, lista)
-			console.log(this.listaToDelete);
 			this.deleteListaModal = true
 		}
 	},

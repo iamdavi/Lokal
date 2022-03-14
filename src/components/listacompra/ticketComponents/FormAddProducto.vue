@@ -78,7 +78,6 @@ export default {
 			const productoId = this.productoEditLocal.producto.id
 			let producto = {}
 			Object.assign(producto, this.productos.find(producto => producto.id === productoId))
-			console.log(producto);
 			producto.cantidad = this.productoEditLocal.cantidad
 			const cantidadPrecio = this.multiplicacionCantidadPrecio(producto)
 			producto.cantidadPrecio = parseFloat(producto.cantidad).toFixed(2)

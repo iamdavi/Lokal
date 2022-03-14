@@ -16,7 +16,28 @@
 			 	md="10"
 				cols="12"
 			>
-				<table-filter></table-filter>
+				<v-card>
+					<v-expansion-panels>
+						<v-expansion-panel>
+							<v-expansion-panel-header>
+								Filtro
+								<template v-slot:actions>
+									<v-icon>
+										mdi-chevron-down
+									</v-icon>
+								</template>
+							</v-expansion-panel-header>
+							<v-expansion-panel-content>
+								<v-text-field
+									v-model="searchString"
+									label="Nombre"
+									prepend-icon="mdi-magnify"
+									clearable
+								></v-text-field>
+							</v-expansion-panel-content>
+						</v-expansion-panel>
+					</v-expansion-panels>
+				</v-card>
 			</v-col>
 		</v-row>
 		<v-row justify="center">
@@ -25,25 +46,47 @@
 			 	md="10"
 				cols="12"
 			>
-				<list-producto></list-producto>
+				<list-producto :productos="productosFiltrados"></list-producto>
 			</v-col>
 		</v-row>
 	</div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 import cabeceraTitulo from '@/components/common/cabeceraTitulo'
 import createProducto from '@/components/productos/subcomponents/createProducto'
-import tableFilter from '@/components/productos/subcomponents/tableFilter'
 import listProducto from '@/components/productos/listProducto'
 
 export default {
 	name: 'Producto',
+	data() {
+		return {
+			searchString: ''
+		}
+	},
 	components: {
 		cabeceraTitulo,
 		createProducto,
 		listProducto,
-		tableFilter
+	},
+	created() {
+		this.getProductos()
+	},
+	methods: {
+		...mapActions(['getProductos']),
+	},
+	computed: {
+		...mapState({
+			productos: 'productos'
+		}),
+		productosFiltrados() { 
+			if (!this.searchString) { return  this.productos }
+			return this.productos.filter(producto => {
+				return producto.nombre.startsWith(this.searchString)
+			})
+		}
 	}
 }
 </script>

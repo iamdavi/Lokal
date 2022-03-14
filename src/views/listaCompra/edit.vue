@@ -4,6 +4,12 @@
 		<v-row justify="center">
 			<v-col cols="12" lg="4" md="6" sm="12">
 				<lista-compra-layout :lista="lista" />
+				<v-btn 
+					class="mt-3 guardar-formulario-button" 
+					color="blue lighten-4" 
+					@click="updateListaCompra()"
+					block
+				>Guardar lista</v-btn>
 				<pre>
 					{{ lista }}
 				</pre>
@@ -34,7 +40,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(['getListaCompra'])
+		...mapActions(['getListaCompra', 'updateLustaCompra'])
 	},
 	created() {
 		this.getListaCompra(this.id)

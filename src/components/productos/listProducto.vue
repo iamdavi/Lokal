@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 import CreateProducto from '@/components/productos/subcomponents/createProducto'
 import ProductoPreciosList from '@/components/productos/subcomponents/productoPreciosList'
 import deleteDialogCard from '@/components/common/deleteDialogCard'
@@ -93,16 +93,20 @@ export default {
 			}
 		}
 	},
+	props: {
+		productos: {
+			type: Array,
+			required: true,
+			default: []
+		}
+	},
 	components: {
 		'CreateProducto': CreateProducto,
 		'ProductoPreciosList': ProductoPreciosList,
 		'DeleteDialogCard': deleteDialogCard
 	},
-	created() {
-		this.getProductos()
-	},
 	methods: {
-		...mapActions(['getProductos', 'eliminarProducto']),
+		...mapActions(['eliminarProducto']),
 		deleteProductoModal(producto) {
 			this.productoEdit.id = producto.id
 			this.productoEdit.nombre = producto.nombre
@@ -119,11 +123,6 @@ export default {
 		getProductoProfit(producto) {
 			return parseFloat(producto.venta - producto.precio).toFixed(2)
 		}
-	},
-	computed: {
-		...mapState({
-			productos: 'productos'
-		})
 	}
 }
 </script>

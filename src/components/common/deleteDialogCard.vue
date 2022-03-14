@@ -40,8 +40,8 @@ export default {
 			this.$emit('close-dialog')
 		},
 		deleteElemento() {
-			this.$emit('close-dialog')
 			this.$emit('delete-item-dialog')
+			this.$emit('close-dialog')
 		}
 	},
 }

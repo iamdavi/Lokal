@@ -1,16 +1,16 @@
 <template>
 	<v-card>
-		<v-span>
+		<span>
 			<v-btn 
 				class="mt-2 ml-2 pl-0"
-				to="/listas-compra"
+				to="/listas-compra#"
 				text 
 				small
 			>
 				<v-icon>mdi-chevron-left</v-icon>
 				Volver a lista
 			</v-btn>
-		</v-span>
+		</span>
 		<v-card-title class="pb-0">
 			<v-text-field
 				v-model="lista.nombre"

@@ -90,10 +90,3 @@ export default {
 	}
 }
 </script>
-
-<style scoped>
-.guardar-formulario-button {
-	position: sticky;
-	bottom: 14px;
-}
-</style>
