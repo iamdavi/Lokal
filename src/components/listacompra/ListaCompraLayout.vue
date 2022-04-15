@@ -28,7 +28,7 @@
 			</v-row>
 			<div class="horizontal-rule"></div>
 			<v-row>
-				<v-col cols="12">
+				<v-col cols="12" class="pb-0">
 					<v-row>
 						<v-col cols="7">
 							<span class="black--text text-h6">Total:</span>
@@ -38,13 +38,23 @@
 						</v-col>
 					</v-row>
 				</v-col>
-				<v-col cols="12">
+				<v-col cols="12" class="pt-0">
 					<v-row>
 						<v-col cols="7">
 							<span class="black--text text-h6">Venta:</span>
 						</v-col>
 						<v-col cols="5" class="text-right">
 							<span class="black--text text-h6">{{ precioVentaTotalLista() }} <v-icon color="black" small style="margin-bottom: 3px;">mdi-currency-eur</v-icon></span>
+						</v-col>
+					</v-row>
+				</v-col>
+				<v-col cols="12">
+					<v-row>
+						<v-col cols="7">
+							<span class="black--text text-h6">Profit:</span>
+						</v-col>
+						<v-col cols="5" class="text-right">
+							<span class="success--text text-h6">{{ profitTotalLista() }} <v-icon color="success" small style="margin-bottom: 3px;">mdi-currency-eur</v-icon></span>
 						</v-col>
 					</v-row>
 				</v-col>
@@ -83,26 +93,26 @@ export default {
 	},
 	methods: {
 		precioVentaTotalLista() {
-			const productosLista = this.lista.productos
 			let totalVenta = 0
+			const productosLista = this.lista.productos
 			if (!productosLista) { return 0 }
 			productosLista.forEach(producto => {
-				totalVenta += parseFloat(producto.cantidadPrecioString)
+				totalVenta += parseFloat(producto.beneficioProducto)
 			})
-			return parseFloat(totalVenta).toFixed(2)
+			return totalVenta.toFixed(2)
 		},
 		precioTotalLista() {
-			let productos = [null]
 			let totalLista = 0
-			Object.assign(productos, this.lista.productos)
-			if (!productos) { return 0 }
-			productos.forEach(producto => {
-				if (producto) {
-					totalLista += (producto.cantidad * producto.precio)
-				}
+			const productosLista = this.lista.productos
+			if (!productosLista) { return 0 }
+			productosLista.forEach(producto => {
+				totalLista += producto.gastoProducto
 			})
 			return parseFloat(totalLista).toFixed(2)
 		},
+		profitTotalLista() {
+			return (this.precioVentaTotalLista() - this.precioTotalLista()).toFixed(2);
+		}
 	}
 }
 </script>

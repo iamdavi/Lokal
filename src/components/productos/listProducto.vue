@@ -5,7 +5,7 @@
 				<v-col cols="12" sm="6">
 					<span class="text-h5">Lista de productos</span>
 				</v-col>
-				<v-col cols="12" sm="6" class="text-md-right text-sm-left">
+				<v-col cols="12" sm="6" class="text-md-right">
 					<producto-precios-list 
 						:producto="{ 
 							venta: 'Venta producto',

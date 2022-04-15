@@ -7,12 +7,9 @@
 				<v-btn 
 					class="mt-3 guardar-formulario-button" 
 					color="blue lighten-4" 
-					@click="updateListaCompra()"
+					@click="updateListaCompra(lista)"
 					block
 				>Guardar lista</v-btn>
-				<pre>
-					{{ lista }}
-				</pre>
 			</v-col>
 		</v-row>
 	</div>
@@ -40,7 +37,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(['getListaCompra', 'updateLustaCompra'])
+		...mapActions(['getListaCompra', 'updateListaCompra'])
 	},
 	created() {
 		this.getListaCompra(this.id)

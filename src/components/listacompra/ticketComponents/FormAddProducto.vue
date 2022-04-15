@@ -2,31 +2,52 @@
 	<v-card color="blue lighten-4" class="card-form-add-producto">
 		<v-container>
 			<v-row align="center">
-				<v-col cols="12">
-					<v-autocomplete
-						v-model="productoEditLocal.producto.id"
+				<v-dialog v-model="createProductoDialog" max-width="500px">
+					<create-add-producto-compra
+						@submit="createProductAndAddToList"
+					></create-add-producto-compra>
+				</v-dialog>
+				<v-col cols="10">
+					<v-combobox
+						v-model="productoSeleccionado"
 						:loading="loading"
 						:items="productos"
+						:value="productoSeleccionado"
 						item-text="nombre"
 						item-value="id"
 						cache-items
 						hide-no-data
 						hide-details
 						label="Producto"
-					></v-autocomplete>
+					></v-combobox>
 				</v-col>
-				<v-col cols="9">
+				<!-- Botón lanzar modal crear producto -->
+				<div 
+					class="button-create-producto-to-list elevation-4"
+					@click="createProductoDialog = true"
+				>
+					<v-icon
+						color="white"
+						small
+					>mdi-plus</v-icon>
+					<v-icon
+						color="white"
+					>mdi-food-drumstick</v-icon>
+					<div class="sombra-producto"></div>
+				</div>
+				<!--/ Botón lanzar modal crear producto -->
+				<v-col cols="10">
 					<v-text-field
 						v-model="productoEditLocal.cantidad"
 						placeholder="Cant."
 						type="number"
 					></v-text-field>
 				</v-col>
-				<v-col cols="3" align-self="center" class="d-flex justify-center">
+				<v-col cols="2" align-self="center" class="d-flex justify-center">
 					<v-btn 
 						color="white"
 						elevation="1"
-						@click="addProductoLocal()"
+						@click="formAddProductoLocal()"
 						small
 						fab
 					>
@@ -39,23 +60,29 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { createLogger, mapActions, mapState } from 'vuex'
+import CreateAddProductoCompra from '@/components/listacompra/ticketComponents/CreateAddProductoCompra'
 
 export default {
 	data() {
 		return {
 			loading: false,
+			createProductoDialog: false,
+			// En caso de que selecciona un producto de los disponibles, carga todo el
+			// objeto, en caso contrario, solo contiene el nombre introducido
+			productoSeleccionado: '',
 			productoEditLocal: {
 				producto: {
 					id: null,
 					nombre: null,
 					precio: null
 				},
-				cantidad: null,
-				cantidadPrecio: null,
-				cantidadPrecioString: null
+				cantidad: null
 			},
 		}
+	},
+	components: {
+		'CreateAddProductoCompra': CreateAddProductoCompra
 	},
 	props: {
 		lista: {
@@ -66,26 +93,33 @@ export default {
 	},
 	computed: {
 		...mapState({
-			productos: 'productos'
+			productos: 'productos',
+			productoCreateAdd: 'productoCreateAdd'
 		})
 	},
 	created() {
 		this.getProductos()
 	},
 	methods: {
-		...mapActions(['getProductos']),
-		addProductoLocal() {
-			const productoId = this.productoEditLocal.producto.id
+		...mapActions(['getProductos', 'addProducto', 'clearProductoCreateAdd']),
+		formAddProductoLocal() {
+			if (!this.productoSeleccionado) { return; }
 			let producto = {}
-			Object.assign(producto, this.productos.find(producto => producto.id === productoId))
+			Object.assign(producto, this.productos.find(producto => {
+				return producto.id == this.productoSeleccionado.id
+			}));
+			if (!producto.hasOwnProperty('id')) {
+				producto = this.productoCreateAdd
+			}
 			producto.cantidad = this.productoEditLocal.cantidad
-			const cantidadPrecio = this.multiplicacionCantidadPrecio(producto)
-			producto.cantidadPrecio = parseFloat(producto.cantidad).toFixed(2)
-			producto.cantidadPrecioString = cantidadPrecio.toFixed(2)
+			producto.gastoProducto = (producto.cantidad * producto.precio).toFixed(2)
+			producto.beneficioProducto = (producto.cantidad * producto.venta).toFixed(2)
 			this.lista.productos.unshift(producto)
 		},
-		multiplicacionCantidadPrecio(producto) {
-			return producto.cantidad * producto.precio
+		createProductAndAddToList() {
+			this.productos.unshift(this.productoCreateAdd)
+			this.productoSeleccionado = this.productoCreateAdd
+			this.createProductoDialog = false
 		},
 	},
 }

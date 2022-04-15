@@ -9,7 +9,6 @@ export default new Vuex.Store({
   state: {
     compras: [],
     compra: {
-      fecha: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       gastado: 0,
       obtenido: 0
     },
@@ -19,6 +18,9 @@ export default new Vuex.Store({
       nombre: ''
     },
     productos: [],
+    // Producto usado para crearlo y añadirlo a la lista de la compra.
+    //// ¡Este producto no se crea en la colección de productos! ////
+    productoCreateAdd: {}, 
     producto: {
       nombre: '',
       precio: 0
@@ -50,6 +52,9 @@ export default new Vuex.Store({
     },
     setProductos(state, payload) {
       state.productos = payload
+    },
+    setProductoCreateAdd(state, payload) {
+      state.productoCreateAdd = payload
     },
     addProducto(state, payload) {
       state.productos.unshift(payload)
@@ -105,6 +110,9 @@ export default new Vuex.Store({
       let persona = {
         nombre: nombrePersona
       }
+      persona.fechaCreacion = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
+        .toISOString()
+        .substr(0, 10);
       db.collection('personas').add(persona)
         .then(doc => {
           persona.id = doc.id
@@ -125,6 +133,9 @@ export default new Vuex.Store({
         obtenido: parseInt(compraData.obtenido),
         gastado: parseInt(compraData.gastado)
       }
+      compra.fechaCreacion = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
+        .toISOString()
+        .substr(0, 10);
       db.collection('compras').add(compra)
         .then(doc => {
           compra.id = doc.id
@@ -166,9 +177,15 @@ export default new Vuex.Store({
           commit('setProductos', productos)
         })
     },
+    clearProductoCreateAdd({ commit }) {
+      commit('setProductoCreateAdd', {})
+    },
     addProducto({ commit }, productoData) {
       let producto = {}
       Object.assign(producto, productoData)
+      producto.fechaCreacion = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
+        .toISOString()
+        .substr(0, 10);
       db.collection('productos').add(producto)
         .then(doc => {
           producto.id = doc.id
@@ -192,10 +209,14 @@ export default new Vuex.Store({
     addListaCompra({ commit }, listaCompra) {
       let lista = {}
       Object.assign(lista, listaCompra)
+      lista.fechaCreacion = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
+        .toISOString()
+        .substr(0, 10);
       db.collection('listas-compras').add(lista)
         .then(doc => {
           listaCompra.id = doc.id
           commit('addListaCompra', listaCompra)
+          router.push('/listas-compra')
         })
     },
     eliminarListaCompra({ commit }, id) {
@@ -224,8 +245,14 @@ export default new Vuex.Store({
           });
           commit('setListasCompras', listasCompras)
         })
-    }
-    // FIN -> LISTA-COMPRA
+    },
+    updateListaCompra({ commit }, listaCompra) {
+      db.collection('listas-compras').doc(listaCompra.id).update(listaCompra)
+        .then(res => {
+          console.log(res);
+          router.push('/listas-compra')
+        })
+    },
   },
   modules: {
   }

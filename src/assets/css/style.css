@@ -51,7 +51,7 @@
 	height: 3px;
 	background-color: grey;
 	border-radius: 4px;
-	width: 95%;
+	width: 100%;
 	margin: auto;
 	margin-bottom: 12px;
 }
@@ -67,4 +67,31 @@
 .text-field-dense {
 	margin-top: 0px;
 	padding-top: 0px;
+}
+
+.button-create-producto-to-list {
+	cursor: pointer;
+	text-align: center;
+	height: 40px;
+    width: 20%;
+    background-color: #1976d2;
+    position: absolute;
+    top: 25px;
+    right: -11px;
+    border-radius: 4px 4px 0px 4px;
+}
+
+.button-create-producto-to-list > i {
+	margin: 8px 0px 0px 0px;
+}
+
+.sombra-producto {
+	height: 0;
+    width: 0;
+    border-top: 0px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 13px solid #3d6485;
+    position: absolute;
+    right: 0;
+    bottom: -13px;
 }

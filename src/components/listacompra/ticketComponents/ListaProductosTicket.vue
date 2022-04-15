@@ -18,7 +18,7 @@
 							<v-text-field
 								class="text-field-dense mt-0 pt-0"
 								style="max-width: 4.7rem;"
-								v-model="producto.cantidadPrecioString"
+								v-model="producto.gastoProducto"
 								:hide-details="true"
 								append-icon="mdi-currency-eur"
 								type="number"

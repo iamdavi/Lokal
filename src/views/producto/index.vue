@@ -84,7 +84,7 @@ export default {
 		productosFiltrados() { 
 			if (!this.searchString) { return  this.productos }
 			return this.productos.filter(producto => {
-				return producto.nombre.startsWith(this.searchString)
+				return producto.nombre.toLowerCase().includes(this.searchString.toLowerCase())
 			})
 		}
 	}

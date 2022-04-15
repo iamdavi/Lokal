@@ -1,8 +1,10 @@
 <template>
 	<v-card color="blue lighten-4">
-		<v-form @submit.prevent="submitForm(producto)">
+		<v-form @submit.prevent="submitForm">
 			<v-card-title>
-				<span class="text-h5">{{ title }}</span>
+				<span class="text-h5">
+					Añadir producto nuevo a la lista
+				</span>
 			</v-card-title>
 			<v-card-text class="py-0">
 				<v-row class="d-flex flex-row align-center justify-center">
@@ -53,53 +55,22 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
 	data() {
 		return {
 		}
 	},
-	props: {
-		title: {
-			type: String,
-			required: false,
-			default: "Crear producto"
-		},
-		producto: {
-			type: Object,
-			required: false,
-			default: () => ({})
-		},
-		createAction: { // Si es FALSE, se actualiza el producto
-			type: Boolean,
-			require: false,
-			default: true
-		},
-		doLocalAction: {
-			type: Boolean,
-			require: false,
-			default: true
-		}
-	},
 	computed: {
+		...mapState({
+			producto: 'productoCreateAdd'
+		})
 	},
 	methods: {
-		...mapActions(['addProducto', 'editProducto']),
-		submitForm(producto) {
-			if (this.doLocalAction) {
-				if (this.createAction) {
-					this.addProducto(producto)
-				} else {
-					this.editProducto(producto)
-				}
-				this.$emit('submit')
-			}
-			this.$emit('createAddProduct', producto)
-			this.producto.nombre = ''
-			this.producto.precio = ''
-			this.producto.venta = ''
+		submitForm() {
+			this.$emit('submit')
 		}
-	},
+	}
 }
 </script>
