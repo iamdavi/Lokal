@@ -84,6 +84,11 @@ export default {
         title: 'Listas de compra',
         to: '/listas-compra'
       },
+      {
+        icon: 'mdi-currency-usd',
+        title: 'Pagos',
+        to: '/pagos'
+      },
     ],
     miniVariant: true,
     right: true,
