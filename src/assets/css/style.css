@@ -95,3 +95,20 @@
     right: 0;
     bottom: -13px;
 }
+
+.cursor-pointer {
+	cursor: pointer !important;
+}
+
+#overlay-precio-por-persona > .v-overlay__content {
+	height: 90%;
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+}
+#overlay-precio-por-persona .v-input__control {
+	align-self: center;
+}
+.d-transparent {
+	opacity: 0;
+}

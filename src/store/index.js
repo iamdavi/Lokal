@@ -29,7 +29,13 @@ export default new Vuex.Store({
     listaCompra: {
       nombre: '',
       productos: []
-    }
+    },
+    pagos: [],
+    pago: {
+      precioPorPersona: 0,
+      mesPago: '',
+      personas: []
+    },
   },
   mutations: {
     setPersonas(state, payload) {
@@ -73,25 +79,32 @@ export default new Vuex.Store({
     },
     setEliminarListaCompra(state, payload) {
       state.listasCompras = state.listasCompras.filter(item => item.id !== payload)
-    }
+    },
+    addPago(state, payload) {
+      state.pagos.push(payload)
+    },
+    setPago(state, payload) {
+      state.pago = payload
+    },
+    setPagos(state, payload) {
+      state.pagos = payload
+    },
   },
   actions: {
     // PERSONAS
-    getPersonas({ commit }, limit=-1) {
-      const personas = []
+    async getPersonas({ commit }, limit=-1) {
       const qry = db.collection('personas')
       if (limit > -1) {
         qry.limit(limit)
       }
-      qry.orderBy('nombre').get()
-        .then(res => {
-          res.forEach(doc => {
-            let persona = doc.data()
-            persona.id = doc.id
-            personas.push(persona)
-          });
-          commit('setPersonas', personas)
-        })
+      const res = await qry.orderBy('nombre').get();
+      const personas = res.docs.map(doc => {
+        let persona = doc.data()
+        persona.id = doc.id;
+        return persona;
+      });
+      commit('setPersonas', personas)
+      return personas
     },
     getPersona({ commit }, id) {
       db.collection('personas').doc(id).get()
@@ -253,6 +266,33 @@ export default new Vuex.Store({
           router.push('/listas-compra')
         })
     },
+    // PAGO 
+    async createPago({ commit, dispatch }, pagoCreate) {
+      let pago = {}
+      Object.assign(pago, pagoCreate)
+      pago.fechaCreacion = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
+        .toISOString()
+        .substr(0, 10);
+
+      const personas = await dispatch('getPersonas');
+      personas.map(persona => persona.pagado = false);
+      pago.personas = personas;
+
+      const res = await db.collection('pagos').add(pago);
+      pago.id = res.id
+      commit('addPago', pago)
+      return pago;
+    },
+    async getPagos({ commit }) {
+      const res = await db.collection('pagos').get();
+      const pagos = res.docs.map(doc => {
+        let pago = doc.data()
+        pago.id = doc.id;
+        return pago;
+      });
+      commit('setPagos', pagos)
+      return pagos
+    }
   },
   modules: {
   }
