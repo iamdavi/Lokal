@@ -262,7 +262,6 @@ export default new Vuex.Store({
     updateListaCompra({ commit }, listaCompra) {
       db.collection('listas-compras').doc(listaCompra.id).update(listaCompra)
         .then(res => {
-          console.log(res);
           router.push('/listas-compra')
         })
     },
@@ -292,7 +291,10 @@ export default new Vuex.Store({
       });
       commit('setPagos', pagos)
       return pagos
-    }
+    },
+    async updatePago({ commit }, pago) {
+      const res = await db.collection('pagos').doc(pago.id).update(pago)
+    },
   },
   modules: {
   }

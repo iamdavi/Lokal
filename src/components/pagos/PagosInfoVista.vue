@@ -48,7 +48,7 @@
 						</v-btn>
 					</template>
 					<template v-slot:default="dialog">
-						<pagos-ajustes @dismiss-modal="dialog.value = false" />
+						<pagos-ajustes @update-precio="updatePrecio" @dismiss-modal="dialog.value = false" :precioPorPersonaToCreate="pago.precioPorPersona" />
 					</template>
 				</v-dialog>
 			</v-col>
@@ -73,17 +73,51 @@
 				</v-list-item-group>
 			</v-list>
 		</v-card>
+		<v-btn 
+			v-if="hasCambios" 
+			@click="guardarPago"
+			:loading="guardandoPago"
+			:disabled="guardandoPago"
+			block 
+			color="primary" 
+			class="mt-3"
+		>
+			Guardar pago
+		</v-btn>
+    <v-snackbar
+      v-model="pagoGuardado"
+      color="success"
+      outlined
+			top
+			right
+    >
+      Pago actualizado
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="success"
+          text
+          v-bind="attrs"
+          @click="pagoGuardado = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
 	</div>
 </template>
 
 <script>
 import PagosAjustes from '@/components/pagos/PagosAjustes'
+import { mapActions } from 'vuex'
 
 export default {
 	name: "PagosInfoVista",
 	data() {
 		return {
-			
+			pagoOriginal: {},
+			hasCambios: false,
+			guardandoPago: false,
+			pagoGuardado: false
 		}
 	},
 	props: {
@@ -103,8 +137,36 @@ export default {
 		PagosAjustes
 	},
 	created() {
+		this.pagoOriginal = JSON.parse(JSON.stringify(this.pago))
+	},
+	watch: {
+		pago: {
+			handler(val) {
+				let cambioPorPersona = this.pagoOriginal.precioPorPersona != val.precioPorPersona
+				let cambioPersonaPagado = false;
+				val.personas.forEach((persona, index) => {
+					if (persona.pagado != this.pagoOriginal.personas[index].pagado) {
+						cambioPersonaPagado = true;
+					}
+				});
+				this.hasCambios = cambioPorPersona || cambioPersonaPagado
+			},
+			deep: true
+		}
 	},
 	methods: {
+		...mapActions(['updatePago']),
+		async guardarPago() {
+			this.guardandoPago = true;
+			await this.updatePago(this.pago);
+			this.pagoOriginal = this.pago;
+			this.hasCambios = false;
+			this.guardandoPago = false;
+			this.pagoGuardado = true;
+		},
+		updatePrecio(newPrecio) {
+			this.pago.precioPorPersona = parseInt(newPrecio)
+		},
 		/**
 		 * Método que obtiene el número de personas que han/no han pagado el lokal
 		 * ese mes.

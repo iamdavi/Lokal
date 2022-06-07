@@ -16,7 +16,7 @@
 			<v-row>
 				<v-col cols="12">
 					<v-text-field
-						v-model="precioPorPersonaToCreate"
+						v-model="newPrecio"
 						label="Euros por persona"
 						placeholder="15"
 						hide-details
@@ -33,7 +33,7 @@
 			<v-row class="mb-1">
 				<v-col cols="12" class="pb-0">
 					<v-btn color="error">Eliminar pago</v-btn>
-					<v-btn color="primary" class="float-right">Guardar</v-btn>
+					<v-btn color="primary" class="float-right" @click="guardarTarjeta()">Guardar</v-btn>
 				</v-col>
 				<v-col cols="12" class="py-0">
 					<span class="text-caption red--text text--lighten-1">
@@ -51,8 +51,23 @@ export default {
 	name: "PagosAjustes",
 	data() {
 		return {
-			precioPorPersonaToCreate: 10
+			newPrecio: 0
 		}
 	},
+	props: {
+		precioPorPersonaToCreate: {
+			type: Number,
+			required: true
+		}
+	},
+	created() {
+		this.newPrecio = this.precioPorPersonaToCreate
+	},
+	methods: {
+		guardarTarjeta() {
+			this.$emit('update-precio', this.newPrecio);
+			this.$emit('dismiss-modal');
+		}
+	}
 }
 </script>
