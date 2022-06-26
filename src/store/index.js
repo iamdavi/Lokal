@@ -36,6 +36,7 @@ export default new Vuex.Store({
       mesPago: '',
       personas: []
     },
+    gruposLimpieza: []
   },
   mutations: {
     setPersonas(state, payload) {
@@ -89,6 +90,19 @@ export default new Vuex.Store({
     setPagos(state, payload) {
       state.pagos = payload
     },
+    setGruposLimpieza(state, payload) {
+      state.gruposLimpieza = payload
+    },
+    addGrupoLimpieza(state, payload) {
+      state.gruposLimpieza.push(payload)
+    },
+    removeGrupoLimpieza(state, id) {
+      state.gruposLimpieza = state.gruposLimpieza.filter(item => item.id !== id);
+    },
+    updateGrupoLimpieza(state, payload) {
+      const nuevosGrupos = state.gruposLimpieza.map(grupo => grupo.id == payload.id ? {...payload} : grupo)
+      this.gruposLimpieza = nuevosGrupos;
+    }
   },
   actions: {
     // PERSONAS
@@ -295,6 +309,31 @@ export default new Vuex.Store({
     async updatePago({ commit }, pago) {
       const res = await db.collection('pagos').doc(pago.id).update(pago)
     },
+    async getGruposLimpieza({ commit }) {
+      const res = await db.collection('grupos-limpieza').get();
+      const grupos = res.docs.map(doc => {
+        let grupo = doc.data();
+        grupo.id = doc.id;
+        return grupo;
+      });
+      commit('setGruposLimpieza', grupos);
+      return grupos;
+    },
+    async createGrupoLimpieza({ commit }, grupoLimpieza) {
+      let grupo = Object.assign({}, grupoLimpieza);
+      const res = await db.collection('grupos-limpieza').add(grupo);
+      grupo.id = res.id
+      commit('addGrupoLimpieza', grupo)
+      return grupo
+    },
+    async eliminarGrupoLimpieza({ commit }, id) {
+      const res = await db.collection('grupos-limpieza').doc(id).delete();
+      commit('removeGrupoLimpieza', id);
+    },
+    async actualizarGrupoLimpieza({ commit }, grupoLimpieza) {
+      const res = await db.collection('grupos-limpieza').doc(grupoLimpieza.id).update(grupoLimpieza);
+      commit('updateGrupoLimpieza', grupoLimpieza);
+    }
   },
   modules: {
   }
