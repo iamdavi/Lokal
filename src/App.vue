@@ -70,11 +70,6 @@ export default {
         to: '/personas'
       },
       {
-        icon: 'mdi-cart',
-        title: 'Compras',
-        to: '/compras'
-      },
-      {
         icon: 'mdi-food-drumstick',
         title: 'Productos',
         to: '/productos'
@@ -88,6 +83,11 @@ export default {
         icon: 'mdi-currency-usd',
         title: 'Pagos',
         to: '/pagos'
+      },
+      {
+        icon: 'mdi-vacuum',
+        title: 'Grupos limpieza',
+        to: '/grupos-limpieza'
       },
     ],
     miniVariant: true,
