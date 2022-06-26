@@ -85,7 +85,7 @@ export default {
 	},
 	created() {
 		if (this.idGrupo) {
-			const { nombre, orden, personas } = this.grupos.find(grupo => grupo.id = this.idGrupo)
+			const { nombre, orden, personas } = this.grupos.find(grupo => grupo.id == this.idGrupo)
 			this.nombreGrupo = nombre
 			this.ordenGrupo = orden
 			const idsPersonasSeleccionadas = personas.map(persona => persona.id)

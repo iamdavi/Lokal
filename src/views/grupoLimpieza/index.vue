@@ -103,11 +103,8 @@ export default {
 			this.gruposLimpieza = newGrupos.sort((a, b) => a.orden - b.orden)
 		},
 		crearGrupoLista(grupo) {
-			console.log(grupo);
-			console.log(this.gruposLimpieza);
-			const nuevaLista = this.gruposLimpieza.push(grupo)
-			console.log(nuevaLista);
-			this.gruposLimpieza = nuevaLista.sort((a, b) => a.orden - b.orden)
+			// this.gruposLimpieza.push(grupo)
+			// this.gruposLimpieza = nuevaLista.sort((a, b) => a.orden - b.orden)
 		}
 	}
 }
