@@ -52,6 +52,7 @@
 					>
 						<pagos-info-vista 
 							:pago="informacionPago"
+							@pago-eliminado="informacionPago = undefined;"
 						/>
 					</v-col>
 				</v-row>

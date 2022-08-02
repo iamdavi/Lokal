@@ -48,7 +48,12 @@
 						</v-btn>
 					</template>
 					<template v-slot:default="dialog">
-						<pagos-ajustes @update-precio="updatePrecio" @dismiss-modal="dialog.value = false" :precioPorPersonaToCreate="pago.precioPorPersona" />
+						<pagos-ajustes 
+							@update-precio="updatePrecio" 
+							@delete-pago="eliminarPagoLocal"
+							@dismiss-modal="dialog.value = false" 
+							:precioPorPersonaToCreate="pago.precioPorPersona" 
+						/>
 					</template>
 				</v-dialog>
 			</v-col>
@@ -155,7 +160,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(['updatePago']),
+		...mapActions(['updatePago', 'eliminarPago']),
 		async guardarPago() {
 			this.guardandoPago = true;
 			await this.updatePago(this.pago);
@@ -163,6 +168,10 @@ export default {
 			this.hasCambios = false;
 			this.guardandoPago = false;
 			this.pagoGuardado = true;
+		},
+		async eliminarPagoLocal() {
+			await this.eliminarPago(this.pago.id)
+			this.$emit("pago-eliminado")
 		},
 		updatePrecio(newPrecio) {
 			this.pago.precioPorPersona = parseInt(newPrecio)

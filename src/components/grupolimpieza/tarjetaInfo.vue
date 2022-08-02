@@ -85,16 +85,7 @@ export default {
 	},
 	created() {
 		if (this.idGrupo) {
-			const { nombre, orden, personas } = this.grupos.find(grupo => grupo.id == this.idGrupo)
-			this.nombreGrupo = nombre
-			this.ordenGrupo = orden
-			const idsPersonasSeleccionadas = personas.map(persona => persona.id)
-			this.listaPersonas = this.personas.map(per => {
-				if (idsPersonasSeleccionadas.includes(per.id)) {
-					per.seleccionada = true
-				}
-				return per
-			})
+			this.setDataToUpdate(this.idGrupo);
 		} else { 
 			this.listaPersonas = this.personas.map(persona => {
 				const personaLista = {
@@ -106,8 +97,25 @@ export default {
 			})
 		}
 	},
+	watch: {
+		idGrupo(nv, ov) {
+			setDataToUpdate(nv);
+		}
+	},
 	methods: {
 		...mapActions(['createGrupoLimpieza', 'actualizarGrupoLimpieza']),
+		setDataToUpdate(idGrupo) {
+			const { nombre, orden, personas } = this.grupos.find(grupo => grupo.id == idGrupo)
+			this.nombreGrupo = nombre
+			this.ordenGrupo = orden
+			const idsPersonasSeleccionadas = personas.map(persona => persona.id)
+			this.listaPersonas = this.personas.map(per => {
+				if (idsPersonasSeleccionadas.includes(per.id)) {
+					per.seleccionada = true
+				}
+				return per
+			})
+		},
 		getPersonasSeleccionadas() {
 			return this.listaPersonas.filter(persona => persona.seleccionada);
 		},

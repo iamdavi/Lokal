@@ -40,14 +40,15 @@
 						year-icon="mdi-calendar-blank"
 						prev-icon="mdi-skip-previous"
 						next-icon="mdi-skip-next"
+						first-day-of-week="1"
 						locale="es-es"
 					></v-date-picker>
 				</v-menu>
+				<span class="text-subtitle">Semana del <b>{{ this.inicioSemana }}</b> al <b>{{ this.finSemana }}</b>.</span>
 				<v-select
 					:items="grupos"
 					v-model="grupoSeleccionado"
 					label="Grupo de limpieza"
-          :hint="`${grupoSeleccionado.nombre}`"
 					prefix="Grupo numero "
           item-text="orden"
           item-value="id"
@@ -56,11 +57,29 @@
           single-line
 					dense
 				></v-select>
-				<v-checkbox
-					class="small-checkbox mt-0"
-					v-model="asignarAutomaticamente"
-					label="Asignar resto de meses automáticamente a partir de este"
-				></v-checkbox>
+				<v-row>
+					<v-col cols="10">
+						<v-checkbox
+							class="small-checkbox mt-0"
+							v-model="asignarAutomaticamente"
+							label="Asignar resto de meses automáticamente a partir de este"
+						></v-checkbox>
+					</v-col>
+					<v-col cols="2" class="text-right">
+						<v-tooltip bottom :open-on-focus="false" :open-on-click="true">
+							<template v-slot:activator="{ on, attrs }">
+								<v-btn
+									icon
+									v-bind="attrs"
+									v-on="on"
+								>
+									<v-icon>mdi-information</v-icon>
+								</v-btn>
+							</template>
+							<span>Marcando esta opción, el resto de grupos de ordenaran por su numero las siguientes semanas.</span>
+						</v-tooltip>
+					</v-col>
+				</v-row>
 				<v-btn block color="primary">Asignar grupos</v-btn>
 			</v-col>
 		</v-row>
@@ -73,9 +92,12 @@ export default {
 	data() {
 		return {
       date: new Date().toISOString().substr(0, 10),
+			inicioSemana: 0,
+			finSemana: 0,
 			menu2: false,
 			asignarAutomaticamente: false,
-			grupoSeleccionado: null
+			grupoSeleccionado: null,
+			showTooltip: false
 		}
 	},
 	computed: {
@@ -94,11 +116,13 @@ export default {
 
 	created() {
 		this.grupoSeleccionado = this.grupos[0];
+		this.getDaysOfWeek()
 	},
 
 	watch: {
 		date (val) {
 			this.dateFormatted = this.formatDate(this.date)
+			this.getDaysOfWeek()
 		},
 	},
 
@@ -115,6 +139,15 @@ export default {
 			const [month, day, year] = date.split('/')
 			return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
 		},
+		getDaysOfWeek() {
+			const today = new Date(this.date);
+
+			const firstDay = new Date(today.setDate(today.getDate() - today.getDay() + 1));
+			const lastDay = new Date(today.setDate(today.getDate() - today.getDay() + 7));
+
+			this.inicioSemana = firstDay.toLocaleDateString(undefined, { day:'numeric' });
+			this.finSemana = lastDay.toLocaleDateString(undefined, { day:'numeric' });
+		}
 	},
 }
 </script>

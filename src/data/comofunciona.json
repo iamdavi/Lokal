@@ -1,0 +1,42 @@
+[
+	{
+		"step": 1,
+		"titulo": "Paso 1",
+		"subTitulo": "Personas",
+		"texto": "Primero debes crear las personas que quieres que estén dentro del sistema para luego poder asignarlas a grupos de limpieza o decir que han pagado.",
+        "icon": "mdi-account-group",
+        "to": "/personas"
+	},
+	{
+		"step": 2,
+		"titulo": "Paso 2",
+		"subTitulo": "Productos",
+		"texto": "Lo siguiente es crear un listado de productos con el precio de compra y el precio de venta. Estos productos los usaremos luego para crear las listas de la compra.",
+        "icon": "mdi-food-drumstick",
+        "to": "/productos"
+	},
+	{
+		"step": 3,
+		"titulo": "Paso 3",
+		"subTitulo": "Listas de la  compra",
+		"texto": "Aquí rellenaremos un \"tiket\" de compra (factura) con los producotos que hemos añadido antes. Con esto podemos ver cuanto nos gastamos en cada compra y cuanto beneficio deberíamos sacar.",
+        "icon": "mdi-format-list-bulleted-square",
+        "to": "/listas-compra"
+	},
+	{
+		"step": 4,
+		"titulo": "Paso 4",
+		"subTitulo": "Pagos",
+		"texto": "Aquí llevaremos el seguimiento de la gente que ha pagado en cada mes, pudiendo ver el dinero total que se debería recaudar.",
+        "icon": "mdi-currency-usd",
+        "to": "/pagos"
+	},
+	{
+		"step": 5,
+		"titulo": "Paso 5",
+		"subTitulo": "Grupos de limpieza",
+		"texto": "Meteremos las personas creadas al principio en los correspondientes grupos de limpieza, y luego asignaremos cada grupo a su mes (se puede hacer automáticamente).",
+        "icon": "mdi-vacuum",
+        "to": "/grupos de limpieza"
+	}
+]

@@ -10,11 +10,11 @@
       <v-list>
         <v-list-item link class="text-center user-data-navbar">
           <v-list-item-content>
-            <v-list-item-title class="text-h6">
-              Nombre usuario
+            <v-list-item-title class="text-h5">
+              Lokal
             </v-list-item-title>
             <v-list-item-subtitle>
-              Email usuario
+              Sistema de gestión
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>

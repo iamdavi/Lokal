@@ -32,7 +32,7 @@
 		<v-card-actions class="justify-space-between">
 			<v-row class="mb-1">
 				<v-col cols="12" class="pb-0">
-					<v-btn color="error">Eliminar pago</v-btn>
+					<v-btn color="error" @click="eliminarPago()">Eliminar pago</v-btn>
 					<v-btn color="primary" class="float-right" @click="guardarTarjeta()">Guardar</v-btn>
 				</v-col>
 				<v-col cols="12" class="py-0">
@@ -66,6 +66,10 @@ export default {
 	methods: {
 		guardarTarjeta() {
 			this.$emit('update-precio', this.newPrecio);
+			this.$emit('dismiss-modal');
+		},
+		eliminarPago() {
+			this.$emit('delete-pago');
 			this.$emit('dismiss-modal');
 		}
 	}

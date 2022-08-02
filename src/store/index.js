@@ -102,7 +102,10 @@ export default new Vuex.Store({
     updateGrupoLimpieza(state, payload) {
       const nuevosGrupos = state.gruposLimpieza.map(grupo => grupo.id == payload.id ? {...payload} : grupo)
       this.gruposLimpieza = nuevosGrupos;
-    }
+    },
+    removePago(state, id) {
+      state.pagos = state.pagos.filter(item => item.id !== id);
+    },
   },
   actions: {
     // PERSONAS
@@ -308,6 +311,10 @@ export default new Vuex.Store({
     },
     async updatePago({ commit }, pago) {
       const res = await db.collection('pagos').doc(pago.id).update(pago)
+    },
+    async eliminarPago({ commit }, id) {
+      const res = await db.collection('pagos').doc(id).delete();
+      commit('removePago', id);
     },
     async getGruposLimpieza({ commit }) {
       const res = await db.collection('grupos-limpieza').get();

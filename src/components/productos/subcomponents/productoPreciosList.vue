@@ -7,7 +7,7 @@
 		<span class="caption producto-precios-list-profit justify-self-start">
 			<v-icon class="mr-2" small>mdi-currency-eur</v-icon>
 			<b :class="{ 'error--text': producto.profit < 0, 'success--text': producto.profit > 0 }">
-				{{ producto.profit }}
+				{{ producto.profit | dosdecimales }}
 			</b>
 		</span>
 		<span class="caption">

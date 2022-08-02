@@ -44,7 +44,7 @@
 							<span class="black--text text-h6">Venta:</span>
 						</v-col>
 						<v-col cols="5" class="text-right">
-							<span class="black--text text-h6">{{ precioVentaTotalLista() }} <v-icon color="black" small style="margin-bottom: 3px;">mdi-currency-eur</v-icon></span>
+							<span class="black--text text-h6">{{ precioVentaTotalLista() | dosdecimales }} <v-icon color="black" small style="margin-bottom: 3px;">mdi-currency-eur</v-icon></span>
 						</v-col>
 					</v-row>
 				</v-col>

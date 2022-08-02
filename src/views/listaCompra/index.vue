@@ -21,23 +21,26 @@
 						md="4"
 					>
 						<v-card class="lista-compra-item">
-							<v-card-title class="pb-0">
-								{{ lista.nombre }}
-								<v-spacer></v-spacer>
-								<v-icon 
-									@click="showModalToDelete(lista)"
-									dense
-								>mdi-close</v-icon>
-							</v-card-title>
-							<v-card-text>
-								<ul>
-									<li
-										v-for="(producto, index) in lista.productos"
-										:key="index"
-									>{{ producto.nombre }}</li>
-									<div class="lista-compra-list-item-text"></div>
-								</ul>
-							</v-card-text>
+							<div>
+								<v-card-title class="pb-0">
+									{{ lista.nombre }}
+									<v-spacer></v-spacer>
+									<v-icon 
+										@click="showModalToDelete(lista)"
+										dense
+									>mdi-close</v-icon>
+								</v-card-title>
+								<v-card-text>
+									<ul>
+										<li
+											v-for="(producto, index) in lista.productos"
+											:key="index"
+											class="grey--text"
+										>{{ producto.nombre }}</li>
+										<div class="lista-compra-list-item-text"></div>
+									</ul>
+								</v-card-text>
+							</div>
 							<v-card-actions>
 								<v-btn 
 									block 
@@ -111,7 +114,14 @@ export default {
 	bottom: 3rem;
 	right: 3rem;
 }
-.lista-compra-list-item-text {
+
+.lista-compra-item {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+/* .lista-compra-list-item-text {
 	width: 100%;
 	height: 22px;
 	box-shadow: inset 2px -16px 14px -8px white;
@@ -126,5 +136,5 @@ export default {
 	width: 100%;
 	position: relative;
 	bottom: 0px;
-}
+} */
 </style>

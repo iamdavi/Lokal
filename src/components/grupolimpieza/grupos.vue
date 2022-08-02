@@ -1,6 +1,9 @@
 <template>
 	<div>
 		<v-row>
+			 <v-col cols="12">
+
+			 </v-col>
 			<v-col 
 				cols="12"
 				sm="12"
@@ -16,12 +19,12 @@
 				lg="9"
 			>
 				<v-row>
-					<v-col cols="10">
+					<v-col>
 						<h2>
 							Grupos
 						</h2>
 					</v-col>
-					<v-col cols="2" class="text-right">
+					<v-col class="text-right">
 						<v-dialog
 							transition="dialog-bottom-transition"
 							v-model="dialogCrear"
@@ -84,28 +87,11 @@
 										color="error" 
 										class="float-left"
 									>Eliminar</v-btn>
-									<v-dialog
-										transition="dialog-bottom-transition"
-										v-model="dialog"
-										max-width="600"
-									>
-										<template v-slot:activator="{ on, attrs }">
-											<v-btn
-												color="primary"
-												class="float-right"
-												v-bind="attrs"
-												v-on="on"
-											>Editar</v-btn>
-										</template>
-										<tarjeta-info 
-											titulo="Editar grupo"
-											:grupos="grupos"
-											:personas="personas"
-											:idGrupo="grupo.id"
-											@close-dialog="cerrarVentana"
-											@grupo-actualizado="actualizarGrupoLista"
-										/>
-									</v-dialog>
+									<v-btn
+										color="primary"
+										class="float-right"
+										@click="editarGrupoLista(grupo.id)"
+									>Editar</v-btn>
 								</v-expansion-panel-content>
 							</v-expansion-panel>
 						</v-expansion-panels>
@@ -113,6 +99,20 @@
 				</v-row>
 			</v-col>
 		</v-row>
+		<v-dialog
+			transition="dialog-bottom-transition"
+			v-model="dialog"
+			max-width="600"
+		>
+			<tarjeta-info 
+				titulo="Editar grupo"
+				:grupos="grupos"
+				:personas="personas"
+				:idGrupo="grupoSeleccionadoId"
+				@close-dialog="cerrarVentana"
+				@grupo-actualizado="actualizarGrupoLista"
+			/>
+		</v-dialog>
 	</div>
 </template>
 
@@ -131,6 +131,7 @@ export default {
 			menu2: false,
 			modelLista: 1,
 			asignarAutomaticamente: false,
+			grupoSeleccionadoId: 0,
 			selectorGrupos: []
 		}
 	},
@@ -157,6 +158,10 @@ export default {
 		cerrarVentana() {
 			this.dialog = false
 			this.dialogCrear = false
+		},
+		editarGrupoLista(id) {
+			this.grupoSeleccionadoId = id
+			this.dialog = true
 		},
 		eliminarGrupo(id) {
 			this.eliminarGrupoLimpieza(id);

@@ -96,6 +96,10 @@
     bottom: -13px;
 }
 
+.pos-relative {
+	position: relative !important;
+}
+
 .cursor-pointer {
 	cursor: pointer !important;
 }
@@ -111,4 +115,8 @@
 }
 .d-transparent {
 	opacity: 0;
+}
+
+p {
+	color: rgba(0,0,0,.7) !important;
 }
