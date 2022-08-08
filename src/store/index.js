@@ -20,7 +20,7 @@ export default new Vuex.Store({
     productos: [],
     // Producto usado para crearlo y añadirlo a la lista de la compra.
     //// ¡Este producto no se crea en la colección de productos! ////
-    productoCreateAdd: {}, 
+    productoCreateAdd: {},
     producto: {
       nombre: '',
       precio: 0
@@ -36,14 +36,15 @@ export default new Vuex.Store({
       mesPago: '',
       personas: []
     },
-    gruposLimpieza: []
+    gruposLimpieza: [],
+    fechaInicioGrupos: undefined
   },
   mutations: {
     setPersonas(state, payload) {
       state.personas = payload
     },
     setPersona(state, payload) {
-      state.persona =  payload
+      state.persona = payload
     },
     addPersona(state, payload) {
       state.personas.push(payload)
@@ -100,16 +101,19 @@ export default new Vuex.Store({
       state.gruposLimpieza = state.gruposLimpieza.filter(item => item.id !== id);
     },
     updateGrupoLimpieza(state, payload) {
-      const nuevosGrupos = state.gruposLimpieza.map(grupo => grupo.id == payload.id ? {...payload} : grupo)
+      const nuevosGrupos = state.gruposLimpieza.map(grupo => grupo.id == payload.id ? { ...payload } : grupo)
       this.gruposLimpieza = nuevosGrupos;
     },
     removePago(state, id) {
       state.pagos = state.pagos.filter(item => item.id !== id);
     },
+    setFechaInicioGrupos(state, fecha) {
+      state.fechaInicioGrupos = fecha
+    }
   },
   actions: {
     // PERSONAS
-    async getPersonas({ commit }, limit=-1) {
+    async getPersonas({ commit }, limit = -1) {
       const qry = db.collection('personas')
       if (limit > -1) {
         qry.limit(limit)
@@ -125,10 +129,11 @@ export default new Vuex.Store({
     },
     getPersona({ commit }, id) {
       db.collection('personas').doc(id).get()
-        .then(doc => {  
+        .then(doc => {
           let persona = doc.data()
           persona.id = doc.id
           commit('setPersona', persona)
+          return persona
         })
     },
     editarPersona({ commit }, persona) {
@@ -179,7 +184,7 @@ export default new Vuex.Store({
      *                            que no se pase ningún valor, devuelve los 1000
      *                            primeros registros (= todos)
      */
-    getCompras({ commit }, limit=1000) {
+    getCompras({ commit }, limit = 1000) {
       const compras = []
       db.collection('compras').limit(limit).orderBy('fecha').get()
         .then(res => {
@@ -257,7 +262,7 @@ export default new Vuex.Store({
     },
     getListaCompra({ commit }, id) {
       db.collection('listas-compras').doc(id).get()
-        .then(doc => {  
+        .then(doc => {
           let listaCompra = doc.data()
           listaCompra.id = doc.id
           commit('setListaCompra', listaCompra)
@@ -316,6 +321,29 @@ export default new Vuex.Store({
       const res = await db.collection('pagos').doc(id).delete();
       commit('removePago', id);
     },
+    async getGruposByOrden({ commit }) {
+      try {
+        const res = await db.collection('grupos-limpieza').orderBy('orden').get()
+        const grupos = res.docs.map(doc => {
+          let grupo = doc.data()
+          grupo.id = doc.id
+          return grupo
+        });
+        return grupos;
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getGrupoLimpieza({ commit }, id) {
+      try {
+        const res = await db.collection('grupos-limpieza').doc(id).get();
+        let grupo = res.data()
+        grupo.id = res.id
+        return grupo
+      } catch (e) {
+        console.log('Error obteniendo grupo de limpieza: ', e);
+      }
+    },
     async getGruposLimpieza({ commit }) {
       const res = await db.collection('grupos-limpieza').get();
       const grupos = res.docs.map(doc => {
@@ -340,6 +368,68 @@ export default new Vuex.Store({
     async actualizarGrupoLimpieza({ commit }, grupoLimpieza) {
       const res = await db.collection('grupos-limpieza').doc(grupoLimpieza.id).update(grupoLimpieza);
       commit('updateGrupoLimpieza', grupoLimpieza);
+    },
+    async getFechaAsignacionGrupos({ commit }) {
+      try {
+        const res = await db.collection('inicio-fecha-grupos').get();
+        const fechas = res.docs.map(doc => {
+          let fecha = doc.data();
+          fecha.id =  doc.id
+          return fecha;
+        })
+        commit('setFechaInicioGrupos', fechas)
+        return fechas;
+      } catch (error) {
+        return false;
+      }
+    },
+    async setFechaAsignacionGrupos({ commit, state }, fechaToAdd) {
+      try {
+        const { fecha, grupoId } = fechaToAdd
+        if (state.fechaInicioGrupos) {
+          state.fechaInicioGrupos.map(async (fecha) => {
+            await db.collection('inicio-fecha-grupos').doc(fecha.id).delete();
+          })
+        }
+        let fechaInicioToAdd = { fecha: fecha, grupo: grupoId }
+        const res = await db.collection('inicio-fecha-grupos').add(fechaInicioToAdd)
+        fechaInicioToAdd.id = res.id
+        commit('setFechaInicioGrupos', [fechaInicioToAdd]);
+        return true
+      } catch (error) {
+        return false
+      }
+    },
+    async deleteCollection(collectionPath='inicio-fecha-grupos', batchSize=-1) {
+      const collectionRef = db.collection(collectionPath);
+      const query = collectionRef.orderBy('__name__').limit(batchSize);
+
+      return new Promise((resolve, reject) => {
+        deleteQueryBatch(db, query, resolve).catch(reject);
+      });
+    },
+    async deleteQueryBatch(db, query, resolve) {
+      const snapshot = await query.get();
+
+      const batchSize = snapshot.size;
+      if (batchSize === 0) {
+        // When there are no documents left, we are done
+        resolve();
+        return;
+      }
+
+      // Delete documents in a batch
+      const batch = db.batch();
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+
+      // Recurse on the next process tick, to avoid
+      // exploding the stack.
+      process.nextTick(() => {
+        deleteQueryBatch(db, query, resolve);
+      });
     }
   },
   modules: {

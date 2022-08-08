@@ -2,7 +2,7 @@
 	<div>
 		<v-row>
 			 <v-col cols="12">
-
+				<grupos-semana />
 			 </v-col>
 			<v-col 
 				cols="12"
@@ -119,6 +119,7 @@
 <script>
 import asignacion from '@/components/grupolimpieza/asignacion'
 import tarjetaInfo from '@/components/grupolimpieza/tarjetaInfo'
+import gruposSemana from '@/components/grupolimpieza/gruposSemana'
 import { mapActions } from 'vuex'
 
 export default {
@@ -149,9 +150,8 @@ export default {
 	},
 	components: {
 		asignacion,
-		tarjetaInfo
-	},
-	created() {
+		tarjetaInfo,
+		gruposSemana
 	},
 	methods: {
 		...mapActions(['eliminarGrupoLimpieza', 'editarGrupoLimpieza']),

@@ -58,44 +58,49 @@
 					dense
 				></v-select>
 				<v-row>
-					<v-col cols="10">
-						<v-checkbox
-							class="small-checkbox mt-0"
-							v-model="asignarAutomaticamente"
-							label="Asignar resto de meses automáticamente a partir de este"
-						></v-checkbox>
-					</v-col>
-					<v-col cols="2" class="text-right">
-						<v-tooltip bottom :open-on-focus="false" :open-on-click="true">
-							<template v-slot:activator="{ on, attrs }">
-								<v-btn
-									icon
-									v-bind="attrs"
-									v-on="on"
-								>
-									<v-icon>mdi-information</v-icon>
-								</v-btn>
-							</template>
-							<span>Marcando esta opción, el resto de grupos de ordenaran por su numero las siguientes semanas.</span>
-						</v-tooltip>
+					<v-col cols="12" class="grey--text mb-4">
+						<span>
+							Al resto de grupos se les asignaran las semanas consecutivas por orden.
+						</span>
 					</v-col>
 				</v-row>
-				<v-btn block color="primary">Asignar grupos</v-btn>
+				<v-btn @click="asignarMesGrupo()" block color="primary">Asignar grupos</v-btn>
 			</v-col>
 		</v-row>
+    <v-snackbar
+      v-model="fechaGuardada"
+      color="success"
+      outlined
+			top
+			right
+    >
+      Grupos asignados
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="success"
+          text
+          v-bind="attrs"
+          @click="fechaGuardada = false"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
 	</v-alert>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
 	name: 'asignacion',
 	data() {
 		return {
       date: new Date().toISOString().substr(0, 10),
+			fechaGuardada: false,
 			inicioSemana: 0,
 			finSemana: 0,
 			menu2: false,
-			asignarAutomaticamente: false,
 			grupoSeleccionado: null,
 			showTooltip: false
 		}
@@ -115,6 +120,7 @@ export default {
 	},
 
 	created() {
+		this.getFechaAsignacionGrupos()
 		this.grupoSeleccionado = this.grupos[0];
 		this.getDaysOfWeek()
 	},
@@ -127,6 +133,7 @@ export default {
 	},
 
 	methods: {
+		...mapActions(['setFechaAsignacionGrupos', 'getFechaAsignacionGrupos']),
 		formatDate (date) {
 			if (!date) return null
 
@@ -147,6 +154,18 @@ export default {
 
 			this.inicioSemana = firstDay.toLocaleDateString(undefined, { day:'numeric' });
 			this.finSemana = lastDay.toLocaleDateString(undefined, { day:'numeric' });
+		},
+		async asignarMesGrupo() {
+			const daySelected = new Date(this.date);
+			const firstDay = new Date(daySelected.setDate(daySelected.getDate() - daySelected.getDay() + 1)).toISOString().slice(0, 10);
+			const res = await this.setFechaAsignacionGrupos({
+				fecha: firstDay,
+				grupoId: this.grupoSeleccionado.id
+			});
+			console.log(res);
+			if (res) {
+				this.fechaGuardada = true
+			}
 		}
 	},
 }
