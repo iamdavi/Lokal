@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-col cols="12" class="pa-0">
         <v-img
-          max-height="300px"
+          height="300px"
           width="100%"
           :src="mainBg"
         >
